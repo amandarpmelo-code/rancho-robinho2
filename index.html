@@ -13,151 +13,45 @@
             background: url('capa 2.jpeg') no-repeat center center fixed;
             background-size: cover; color: var(--marrom);
         }
-
-        /* ACESSO ADM DISCRETO NO TOPO */
-        .topo-adm {
-            background: rgba(0,0,0,0.6);
-            padding: 10px;
-            text-align: right;
-        }
-        .topo-adm input { padding: 5px; border-radius: 4px; border: none; width: 100px; }
-
         .mural {
-            max-width: 550px; 
-            margin: 20px auto;
+            max-width: 550px; margin: 30px auto;
             background: rgba(255, 255, 255, 0.94);
-            padding: 25px; 
-            border-radius: 15px; 
-            text-align: center;
+            padding: 25px; border-radius: 15px; text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
-
-        /* PAINEL DE ADICIONAR ITENS (SÓ APARECE COM SENHA) */
-        #painel-adm {
-            display: none;
-            background: #f0f0f0;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 2px dashed var(--laranja);
-        }
-
-        .logo-mural { 
-            width: 100%;
-            max-width: 250px; 
-            height: auto;
-            margin: 0 auto 15px;
-            display: block;
-        }
-
+        .logo-site { max-width: 250px; height: auto; margin-bottom: 20px; }
         h1 { color: var(--laranja); font-size: 1.8rem; margin-top: 10px; }
-        
         .item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px; border-bottom: 1px solid #ddd; text-align: left;
         }
-        .item.reservado span { text-decoration: line-through; color: #888; }
-
+        .item.reservado { color: #888; }
+        .item.reservado span { text-decoration: line-through; }
         button { padding: 10px 15px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
         .btn-res { background: var(--verde); color: white; }
         .btn-res:disabled { background: #bbb; cursor: not-allowed; }
-        .btn-del { background: #ff4d4d; color: white; margin-left: 10px; display: none; }
-
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; }
-        .modal-content { background: white; width: 85%; max-width: 350px; margin: 100px auto; padding: 25px; border-radius: 10px; }
-        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
     </style>
 </head>
 <body>
-
-    <div class="topo-adm">
-        <input type="password" id="senha-adm" placeholder="Senha ADM">
-        <button onclick="fazerLogin()" style="padding: 5px 10px; font-size: 0.8rem;">Entrar</button>
-    </div>
-
     <div class="mural">
-        <img src="logo-rancho.png.jpeg" class="logo-mural" alt="Rancho do Robinho 2">
-        
+        <img src="logo-nova.png" class="logo-site" alt="Rancho do Robinho 2">
         <h1>Sugestões do Xerife</h1>
-
-        <div id="painel-adm">
-            <input type="text" id="novo-item" placeholder="Nome do presente..." style="width: 80%;">
-            <button onclick="adicionar()" style="background: var(--laranja); color: white; width: 100%; margin-top: 10px;">Adicionar à Lista</button>
-        </div>
-        
         <div id="lista-presentes"></div>
     </div>
-
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <h3>Reservar Item</h3>
-            <input type="text" id="nome-con" placeholder="Seu Nome">
-            <input type="email" id="email-con" placeholder="Seu E-mail">
-            <button class="btn-res" onclick="confirmar()" style="width: 100%;">Confirmar</button>
-            <button onclick="fechar()" style="background:none; color:#888; width: 100%; margin-top: 10px;">Cancelar</button>
-        </div>
-    </div>
-
     <script>
-        const firebaseConfig = { databaseURL: "https://rancho-robinho2-default-rtdb.firebaseio.com/" };
+        // Verifique se o seu databaseURL está correto
+        const firebaseConfig = { databaseURL: "https://seu-projeto-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        let selecionado = null;
-
-        // LOGIN DO ADM
-        function fazerLogin() {
-            if(document.getElementById('senha-adm').value === "robinho2") {
-                document.getElementById('painel-adm').style.display = 'block';
-                document.querySelectorAll('.btn-del').forEach(b => b.style.display = 'inline-block');
-                alert("Modo Administrador ativado!");
-            } else { alert("Senha incorreta!"); }
-        }
-
-        // ADICIONAR ITEM (SÓ PARA ADM)
-        function adicionar() {
-            const nome = document.getElementById('novo-item').value;
-            if(nome) {
-                db.ref('presentes').push({ nome: nome, reservado: false });
-                document.getElementById('novo-item').value = "";
-            }
-        }
-
-        function fechar() { document.getElementById('modal').style.display = 'none'; }
-        function abrir(id) { selecionado = id; document.getElementById('modal').style.display = 'block'; }
-
-        function confirmar() {
-            const n = document.getElementById('nome-con').value;
-            const e = document.getElementById('email-con').value;
-            if(n && e) {
-                db.ref('presentes/' + selecionado).update({ reservado: true, nomeReservado: n, emailReservado: e });
-                fechar();
-            } else { alert("Preencha os campos!"); }
-        }
-
-        function remover(id) {
-            if(confirm("Excluir este item?")) db.ref('presentes/' + id).remove();
-        }
-
         db.ref('presentes').on('value', (snap) => {
-            const lista = document.getElementById('lista-presentes');
-            lista.innerHTML = "";
-            const admAtivo = document.getElementById('painel-adm').style.display === 'block';
-
+            const lista = document.getElementById('lista-presentes'); lista.innerHTML = "";
             snap.forEach((item) => {
-                const p = item.val();
-                const id = item.key;
-                const div = document.createElement('div');
-                div.className = `item ${p.reservado ? 'reservado' : ''}`;
-                div.innerHTML = `
-                    <span>${p.nome}</span>
-                    <div>
-                        <button class="btn-res" ${p.reservado ? 'disabled' : ''} onclick="abrir('${id}')">
-                            ${p.reservado ? 'Reservado' : 'Reservar'}
-                        </button>
-                        <button class="btn-del" style="display: ${admAtivo ? 'inline-block' : 'none'}" onclick="remover('${id}')">X</button>
-                    </div>
-                `;
-                lista.appendChild(div);
+                const p = item.val(); const id = item.key;
+                lista.innerHTML += `
+                    <div class="item ${p.reservado ? 'reservado' : ''}">
+                        <span>${p.nome}</span>
+                        <button class="btn-res" ${p.reservado ? 'disabled' : ''}>${p.reservado ? 'Reservado' : 'Reservar'}</button>
+                    </div>`;
             });
         });
     </script>
