@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rancho do Robinho 2 - Sugestões</title>
+    <title>Rancho do Robinho 2 - Sugestões de Presentes</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -12,84 +12,76 @@
             --creme: #fff5e1;
             --marrom: #3e2723;
             --verde: #2e8b57;
+            --preto: #000;
         }
 
         body {
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Arial, sans-serif;
-            /* SEGUNDA IMAGEM COMO FUNDO DA PÁGINA TODA */
+            color: var(--marrom);
+            background-color: var(--creme);
+            /* Segunda imagem como fundo fixo */
             background-image: url('capa 2.jpeg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             background-repeat: no-repeat;
-            background-color: var(--creme);
         }
 
-        /* BANNER SUPERIOR DISCRETO */
-        .header-banner {
-            background-color: #000;
+        /* Novo Cabeçalho Discreto com a Logo */
+        .header-logo {
             text-align: center;
+            padding: 15px 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 100%);
             position: relative;
-            width: 100%;
-            height: 120px; /* Altura reduzida para ser apenas um cabeçalho */
-            overflow: hidden;
-            border-bottom: 3px solid var(--laranja);
         }
 
-        .img-banner {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            opacity: 0.5; /* EFEITO ESMAECIDO */
+        .img-logo {
+            max-width: 150px; /* Tamanho discreto */
+            height: auto;
+            opacity: 0.9;
         }
 
         .admin-login {
             position: absolute;
             top: 10px;
             right: 15px;
-            z-index: 10;
+            display: flex;
+            gap: 5px;
         }
 
         .admin-login input {
             padding: 5px;
             border-radius: 5px;
-            border: none;
-            width: 70px;
+            border: 1px solid #ccc;
+            width: 80px;
             font-size: 0.8rem;
-            opacity: 0.8;
         }
 
-        /* CONTAINER DA LISTA */
+        /* Lista de Presentes */
         .container-lista {
-            max-width: 550px;
-            margin: 40px auto;
-            background: rgba(255, 255, 255, 0.92); /* Branco levemente transparente */
+            max-width: 600px;
+            margin: 0 auto 100px;
+            background: rgba(255, 255, 255, 0.9);
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        #painel-adm {
-            display: none;
-            background: #fff;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            border: 2px dashed var(--laranja);
+        .container-lista h1 {
+            text-align: center;
+            color: var(--laranja);
+            margin-top: 0;
+            margin-bottom: 25px;
         }
-
-        h1 { text-align: center; color: var(--laranja); margin-top: 0; }
-        p { text-align: center; font-style: italic; }
 
         .item-presente {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #ddd;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
         }
 
         .item-presente.reservado span {
@@ -97,101 +89,282 @@
             color: #999;
         }
 
-        /* BOTÕES */
+        /* Indicador de Reserva */
+        .status-reserva {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+        .status-reserva.disponivel { background-color: var(--verde); }
+        .status-reserva.indisponivel { background-color: #888; }
+
+        /* Painel Administrativo */
+        #painel-adm {
+            display: none;
+            background: white;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px dashed var(--laranja);
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .input-novo-item {
+            padding: 10px;
+            width: 70%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Botões */
         button {
             cursor: pointer;
             border: none;
-            border-radius: 6px;
+            border-radius: 5px;
             padding: 10px 15px;
             font-weight: bold;
-            transition: 0.2s;
+            transition: 0.3s;
         }
 
         .btn-reservar { background: var(--verde); color: white; }
-        .btn-reservar:disabled { background: #bbb; cursor: not-allowed; }
-        .btn-add { background: var(--laranja); color: white; margin-top: 10px; width: 100%; }
-        .btn-del { background: #ff4d4d; color: white; padding: 5px 10px; margin-left: 10px; display: none; }
+        .btn-reservar:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-add { background: var(--laranja); color: white; }
+        .btn-del { 
+            background: #ff4d4d; 
+            color: white; 
+            padding: 5px 10px; 
+            margin-left: 10px;
+            display: none;
+        }
+        .btn-relatorio { background: var(--marrom); color: white; margin-top: 15px; width: 100%; }
+
+        /* Modal de Reserva */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 350px;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .modal-content input {
+            padding: 10px;
+            width: 90%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
     </style>
 </head>
 <body>
 
-    <header class="header-banner">
+    <header class="header-logo">
         <div class="admin-login">
-            <input type="password" id="senha-adm" placeholder="Senha">
-            <button onclick="fazerLogin()" style="padding: 5px; font-size: 0.7rem;">OK</button>
+            <input type="password" id="senha-adm" placeholder="Senha ADM">
+            <button onclick="fazerLogin()" style="padding: 5px 10px; font-size: 0.7rem;">ADM</button>
         </div>
-        <img src="capa.jpeg" alt="Banner" class="img-banner">
+        <img src="logo-rancho.png" alt="Rancho do Robinho 2 Logo" class="img-logo">
     </header>
 
+    <div id="painel-adm">
+        <h3>Painel do Xerife</h3>
+        <input type="text" id="nome-presente" class="input-novo-item" placeholder="Digite um novo presente...">
+        <button class="btn-add" onclick="adicionarPresente()">Adicionar</button>
+        <button class="btn-relatorio" onclick="gerarRelatorio()">Baixar Relatório de Reservas (Excel/CSV)</button>
+    </div>
+
     <main class="container-lista">
-        <h1>Rancho do Robinho 2</h1>
-        <p>Escolha um presente para celebrar com o Xerife!</p>
-
-        <div id="painel-adm">
-            <input type="text" id="nome-presente" placeholder="Nome do presente..." style="width: 93%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-            <button class="btn-add" onclick="adicionarPresente()">Adicionar à Lista</button>
-        </div>
-
-        <div id="lista-presentes">
-            </div>
+        <h1>Sugestões do Xerife</h1>
+        <div id="lista-presentes"></div>
+        <p style="text-align: center; margin-top: 30px;">
+            <a href="#" onclick="recuperarReservas()">Esqueceu o que reservou? Clique aqui</a>
+        </p>
     </main>
 
+    <div id="modal-reserva" class="modal">
+        <div class="modal-content">
+            <h3>Reservar Presente</h3>
+            <p>Para confirmar, por favor nos diga seu nome e e-mail.</p>
+            <input type="text" id="con-nome" placeholder="Seu Nome Completo">
+            <input type="email" id="con-email" placeholder="Seu E-mail Principal">
+            <button class="btn-reservar" onclick="confirmarReserva()">Confirmar Reserva</button>
+            <button style="background: #ccc; margin-left: 5px;" onclick="fecharModal()">Cancelar</button>
+        </div>
+    </div>
+
     <script>
-        // ATENÇÃO: COLOQUE SEU LINK DO FIREBASE ABAIXO
+        // CONFIGURAÇÃO DO FIREBASE (VOCÊ PRECISA PREENCHER AQUI COM O SEU LINK)
         const firebaseConfig = {
-            databaseURL: "SEU_LINK_AQUI", 
+            databaseURL: "https://rancho-robinho2-default-rtdb.firebaseio.com/",
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // SENHA DO ADMINISTRADOR
+        const SENHA_CORRETA = "robinho2";
+        let presenteParaReservarId = null;
+
+        // Função de Login
         function fazerLogin() {
-            if(document.getElementById('senha-adm').value === "robinho2") {
+            const senha = document.getElementById('senha-adm').value;
+            if(senha === SENHA_CORRETA) {
                 document.getElementById('painel-adm').style.display = 'block';
-                document.querySelectorAll('.btn-del').forEach(b => b.style.display = 'inline-block');
-                alert("Modo ADM Ativado!");
+                const botoesDel = document.querySelectorAll('.btn-del');
+                botoesDel.forEach(btn => btn.style.display = 'inline-block');
+                alert("Acesso autorizado, Xerife!");
+            } else {
+                alert("Senha incorreta, parceiro.");
             }
         }
 
+        // Função de Adicionar ao Banco
         function adicionarPresente() {
             const input = document.getElementById('nome-presente');
-            if(input.value) {
-                db.ref('presentes').push({ nome: input.value, reservado: false });
+            const nome = input.value;
+            if(nome.trim() !== "") {
+                db.ref('presentes').push({
+                    nome: nome,
+                    reservado: false,
+                    nomeReservado: "",
+                    emailReservado: ""
+                });
                 input.value = "";
             }
         }
 
+        // Função para ler do Banco em tempo real e desenhar a lista
         db.ref('presentes').on('value', (snapshot) => {
             const lista = document.getElementById('lista-presentes');
             lista.innerHTML = "";
             const painelAberto = document.getElementById('painel-adm').style.display === 'block';
+            const displayDel = painelAberto ? 'inline-block' : 'none';
 
             snapshot.forEach((item) => {
                 const data = item.val();
                 const id = item.key;
                 const div = document.createElement('div');
                 div.className = `item-presente ${data.reservado ? 'reservado' : ''}`;
+                const statusReservaClass = data.reservado ? 'indisponivel' : 'disponivel';
+                
+                // Texto do Convidado se reservado
+                const textoConvidado = data.reservado ? ` (Reservado por ${data.nomeReservado})` : '';
+
                 div.innerHTML = `
-                    <span>${data.nome}</span>
+                    <span>
+                        ${data.nome}${textoConvidado}
+                        <span class="status-reserva ${statusReservaClass}"></span>
+                    </span>
                     <div>
-                        <button class="btn-reservar" ${data.reservado ? 'disabled' : ''} onclick="reservar('${id}')">
+                        <button class="btn-reservar" ${data.reservado ? 'disabled' : ''} onclick="abrirModal('${id}')">
                             ${data.reservado ? 'Reservado' : 'Reservar'}
                         </button>
-                        <button class="btn-del" style="display: ${painelAberto ? 'inline-block' : 'none'}" onclick="remover('${id}')">X</button>
+                        <button class="btn-del" style="display: ${displayDel}" onclick="remover('${id}')">X</button>
                     </div>
                 `;
                 lista.appendChild(div);
             });
         });
 
-        function reservar(id) {
-            if(confirm("Confirmar reserva deste presente?")) {
-                db.ref('presentes/' + id).update({ reservado: true });
+        // Modal de Reserva
+        function abrirModal(id) {
+            presenteParaReservarId = id;
+            document.getElementById('modal-reserva').style.display = 'block';
+        }
+        function fecharModal() {
+            document.getElementById('modal-reserva').style.display = 'none';
+        }
+
+        // Confirmar Reserva no Banco
+        function confirmarReserva() {
+            const nome = document.getElementById('con-nome').value;
+            const email = document.getElementById('con-email').value;
+
+            if(nome.trim() !== "" && email.trim() !== "") {
+                if(confirm(`Deseja reservar este presente, ${nome}? Essa ação não pode ser desfeita.`)) {
+                    db.ref('presentes/' + presenteParaReservarId).update({
+                        reservado: true,
+                        nomeReservado: nome,
+                        emailReservado: email
+                    });
+                    fecharModal();
+                    alert(`Presente reservado com sucesso para ${nome}! Nós do Rancho agradecemos.`);
+                }
+            } else {
+                alert("Por favor, preencha seu nome e e-mail.");
             }
         }
 
+        // Recuperar Reservas
+        function recuperarReservas() {
+            const email = prompt("Por favor, digite seu e-mail para recuperar suas reservas:");
+            if(email) {
+                db.ref('presentes').once('value', (snapshot) => {
+                    let reservasConvidado = [];
+                    snapshot.forEach((item) => {
+                        const data = item.val();
+                        if(data.reservado && data.emailReservado === email) {
+                            reservasConvidado.push(data.nome);
+                        }
+                    });
+
+                    if(reservasConvidado.length > 0) {
+                        alert(`Reservas encontradas para ${email}:\n\n` + reservasConvidado.join("\n"));
+                    } else {
+                        alert(`Não encontramos reservas associadas ao e-mail ${email}.`);
+                    }
+                });
+            }
+        }
+
+        // Gerar Relatório de Reservas para ADM (CSV simples)
+        function gerarRelatorio() {
+            db.ref('presentes').once('value', (snapshot) => {
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Presente,Reservado_Por,E-mail_Convidado\n"; // Cabeçalho
+
+                snapshot.forEach((item) => {
+                    const data = item.val();
+                    if(data.reservado) {
+                        // Limpa os dados de aspas para o CSV
+                        const presente = data.nome.replace(/"/g, '""');
+                        const nome = data.nomeReservado.replace(/"/g, '""');
+                        const email = data.emailReservado.replace(/"/g, '""');
+                        csvContent += `"${presente}","${nome}","${email}"\n`;
+                    }
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "reservas_rancho_robinho_2.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+
+        // Remover (ADM) do Banco
         function remover(id) {
-            if(confirm("Apagar este item?")) db.ref('presentes/' + id).remove();
+            if(confirm("Remover este item da lista?")) {
+                db.ref('presentes/' + id).remove();
+            }
         }
     </script>
 </body>
