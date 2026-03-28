@@ -7,82 +7,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #fff;
-            min-height: 100vh;
+            margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff; min-height: 100vh;
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('rancho-novo.png'); 
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
+            background-size: cover; background-attachment: fixed; background-position: center;
         }
-
-        .admin-access {
-            position: fixed; top: 20px; right: 20px; font-size: 24px;
-            cursor: pointer; z-index: 1000; color: rgba(255, 255, 255, 0.5);
-        }
-
-        .container {
-            max-width: 900px; margin: 0 auto; padding: 40px 20px; text-align: center;
-        }
-
-        .logo-header {
-            max-width: 280px; margin-bottom: 20px; filter: drop-shadow(2px 4px 6px black);
-        }
-
+        .admin-access { position: fixed; top: 20px; right: 20px; font-size: 24px; cursor: pointer; z-index: 1000; color: rgba(255, 255, 255, 0.5); }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+        .logo-header { max-width: 280px; margin-bottom: 20px; filter: drop-shadow(2px 4px 6px black); }
         h1 { font-size: 2.2em; text-shadow: 2px 2px 4px #000; margin-bottom: 10px; }
-
-        /* Botão Esqueci Presente */
-        .btn-forgot {
-            background: none; color: #d4af37; border: 1px solid #d4af37;
-            padding: 10px 20px; cursor: pointer; border-radius: 25px;
-            font-weight: bold; margin-bottom: 30px; transition: 0.3s;
-        }
+        .btn-forgot { background: none; color: #d4af37; border: 1px solid #d4af37; padding: 10px 20px; cursor: pointer; border-radius: 25px; font-weight: bold; margin-bottom: 30px; transition: 0.3s; }
         .btn-forgot:hover { background: #d4af37; color: #000; }
-
-        /* Painel Admin */
-        #admin-panel {
-            display: none; background: rgba(0, 0, 0, 0.9); padding: 20px;
-            border-radius: 10px; margin-bottom: 30px; border: 1px dashed #d4af37;
-        }
-
-        /* Grid de Presentes */
-        .gift-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px; margin-top: 10px;
-        }
-
-        .gift-card {
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-            padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);
-            position: relative;
-        }
-
+        #admin-panel { display: none; background: rgba(0, 0, 0, 0.9); padding: 20px; border-radius: 10px; margin-bottom: 30px; border: 1px dashed #d4af37; }
+        .gift-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 10px; }
+        .gift-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); position: relative; }
         .gift-card.reserved { opacity: 0.6; border: 2px solid #ff4444; }
-        .gift-card.reserved::after {
-            content: "RESERVADO"; color: #ff4444; font-weight: bold;
-            position: absolute; top: 15px; right: 15px; transform: rotate(15deg);
-            border: 2px solid #ff4444; padding: 2px 8px;
-        }
-
-        input {
-            padding: 12px; margin: 10px 0; border-radius: 5px; border: none; width: 85%;
-        }
-
-        .btn-reserve {
-            background-color: #d4af37; color: #000; font-weight: bold;
-            width: 85%; border-radius: 5px; cursor: pointer; border: none; padding: 12px;
-        }
-
+        .gift-card.reserved::after { content: "RESERVADO"; color: #ff4444; font-weight: bold; position: absolute; top: 15px; right: 15px; transform: rotate(15deg); border: 2px solid #ff4444; padding: 2px 8px; }
+        input { padding: 12px; margin: 10px 0; border-radius: 5px; border: none; width: 85%; }
+        .btn-reserve { background-color: #d4af37; color: #000; font-weight: bold; width: 85%; border-radius: 5px; cursor: pointer; border: none; padding: 12px; }
         .btn-reserve:disabled { background-color: #555; cursor: not-allowed; }
-
         .btn-delete { background-color: #ff4444; color: white; border: none; padding: 5px 10px; cursor: pointer; margin-bottom: 10px; }
-
-        /* Modal Senha */
-        #admin-modal {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: #222; padding: 30px; border-radius: 10px; z-index: 2000; text-align: center;
-        }
+        #admin-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #222; padding: 30px; border-radius: 10px; z-index: 2000; text-align: center; }
     </style>
 </head>
 <body>
@@ -121,8 +65,13 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <script>
+        (function() {
+            emailjs.init("SUA_PUBLIC_KEY_AQUI"); // Substitua pela sua chave do EmailJS
+        })();
+
         const firebaseConfig = {
             apiKey: "AIzaSyAIGya897hLJUDItH1VChjI6o_lswcbR-k",
             authDomain: "ranchodorobinhoo.firebaseapp.com",
@@ -148,12 +97,17 @@
                         const gift = data[id];
                         const card = document.createElement('div');
                         card.className = `gift-card ${gift.reserved ? 'reserved' : ''}`;
+                        
+                        // Lógica: Se reservado e não for admin, oculta o input e valor do e-mail
+                        const inputHTML = gift.reserved ? '' : `<input type="email" id="email-${id}" placeholder="Seu e-mail" required>`;
+                        const buttonText = gift.reserved ? 'JÁ RESERVADO' : 'RESERVAR PRESENTE';
+
                         card.innerHTML = `
-                            ${isAdmin ? `<button class="btn-delete" onclick="deleteGift('${id}')">Excluir</button>` : ''}
+                            ${isAdmin ? `<button class="btn-delete" onclick="deleteGift('${id}')">Excluir</button> <br> <small style="color:yellow">${gift.email || 'Sem e-mail'}</small>` : ''}
                             <h3>${gift.name}</h3>
-                            <input type="email" id="email-${id}" placeholder="Seu e-mail" ${gift.reserved ? 'disabled' : ''} value="${gift.email || ''}">
-                            <button class="btn-reserve" onclick="reserveGift('${id}')" ${gift.reserved ? 'disabled' : ''}>
-                                ${gift.reserved ? 'RESERVADO' : 'RESERVAR'}
+                            ${inputHTML}
+                            <button class="btn-reserve" onclick="reserveGift('${id}', '${gift.name}')" ${gift.reserved ? 'disabled' : ''}>
+                                ${buttonText}
                             </button>
                         `;
                         list.appendChild(card);
@@ -162,10 +116,29 @@
             });
         }
 
+        function reserveGift(id, giftName) {
+            const email = document.getElementById(`email-${id}`).value;
+            if (!email.includes('@')) return alert("Por favor, coloque seu e-mail para receber a confirmação!");
+            
+            db.ref('presentes/' + id).update({ reserved: true, email: email })
+            .then(() => {
+                alert("Reserva confirmada! Verifique seu e-mail (se configurado).");
+                
+                // Envio do E-mail via EmailJS
+                const templateParams = {
+                    to_email: email,
+                    nome_presente: giftName
+                };
+
+                emailjs.send('SEU_SERVICE_ID', 'SEU_TEMPLATE_ID', templateParams)
+                .then(() => console.log('E-mail enviado!'), (err) => console.log('Erro e-mail:', err));
+            });
+        }
+
+        // Funções de Admin e Busca permanecem iguais para manter a utilidade
         function consultarReserva() {
             const emailBusca = prompt("Digite o e-mail usado na reserva:");
             if (!emailBusca || !emailBusca.includes('@')) return alert("E-mail inválido.");
-            
             db.ref('presentes').once('value', (snapshot) => {
                 const data = snapshot.val();
                 let encontrados = [];
@@ -176,39 +149,17 @@
                         }
                     });
                 }
-                if (encontrados.length > 0) alert("Você reservou: " + encontrados.join(", "));
+                if (encontrados.length > 0) alert("Localizamos sua reserva!\n\nVocê reservou: " + encontrados.join(", "));
                 else alert("Nenhuma reserva para este e-mail.");
             });
         }
 
         function addGift() {
             const name = document.getElementById('new-gift-name').value;
-            if (name) {
-                db.ref('presentes').push({ name: name, reserved: false, email: "" });
-                document.getElementById('new-gift-name').value = '';
-            }
+            if (name) { db.ref('presentes').push({ name: name, reserved: false, email: "" }); document.getElementById('new-gift-name').value = ''; }
         }
-
-        function deleteGift(id) {
-            if(confirm("Excluir item?")) db.ref('presentes/' + id).remove();
-        }
-
-        function reserveGift(id) {
-            const email = document.getElementById(`email-${id}`).value;
-            if (!email.includes('@')) return alert("E-mail obrigatório!");
-            db.ref('presentes/' + id).update({ reserved: true, email: email });
-            alert("Reserva confirmada!");
-        }
-
-        function checkPass() {
-            if (document.getElementById('admin-pass').value === "1234") {
-                isAdmin = true;
-                document.getElementById('admin-panel').style.display = 'block';
-                closeModal();
-                renderGifts();
-            } else alert("Senha incorreta!");
-        }
-
+        function deleteGift(id) { if(confirm("Excluir item?")) db.ref('presentes/' + id).remove(); }
+        function checkPass() { if (document.getElementById('admin-pass').value === "1234") { isAdmin = true; document.getElementById('admin-panel').style.display = 'block'; closeModal(); renderGifts(); } else alert("Senha incorreta!"); }
         function openModal() { document.getElementById('admin-modal').style.display = 'block'; }
         function closeModal() { document.getElementById('admin-modal').style.display = 'none'; }
         function logoutAdmin() { isAdmin = false; document.getElementById('admin-panel').style.display = 'none'; renderGifts(); }
