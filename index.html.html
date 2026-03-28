@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+
+&#x20;   <meta charset="UTF-8">
+
+&#x20;   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+&#x20;   <title>Rancho do Robinho 2 - Sugestões</title>
+
+&#x20;   <style>
+
+&#x20;       :root {
+
+&#x20;           --laranja: #e28f42;
+
+&#x20;           --creme: #fff5e1;
+
+&#x20;           --marrom: #3e2723;
+
+&#x20;           --verde: #2e8b57;
+
+&#x20;           --preto: #000000;
+
+&#x20;       }
+
+
+
+&#x20;       body {
+
+&#x20;           margin: 0;
+
+&#x20;           font-family: 'Segoe UI', Arial, sans-serif;
+
+&#x20;           background-color: var(--creme);
+
+&#x20;           color: var(--marrom);
+
+&#x20;       }
+
+
+
+&#x20;       /\* Topo com a imagem preta \*/
+
+&#x20;       .header-preto {
+
+&#x20;           background-color: var(--preto);
+
+&#x20;           text-align: center;
+
+&#x20;           padding: 20px;
+
+&#x20;           position: relative;
+
+&#x20;       }
+
+
+
+&#x20;       .img-capa {
+
+&#x20;           max-width: 100%;
+
+&#x20;           height: 250px;
+
+&#x20;           object-fit: contain;
+
+&#x20;       }
+
+
+
+&#x20;       /\* Seção do Cowboy \*/
+
+&#x20;       .secao-hero {
+
+&#x20;           display: flex;
+
+&#x20;           align-items: center;
+
+&#x20;           justify-content: center;
+
+&#x20;           flex-wrap: wrap;
+
+&#x20;           padding: 40px 20px;
+
+&#x20;           gap: 40px;
+
+&#x20;       }
+
+
+
+&#x20;       .img-cowboy {
+
+&#x20;           width: 320px;
+
+&#x20;           border-radius: 20px;
+
+&#x20;           box-shadow: 10px 10px 0px var(--laranja);
+
+&#x20;       }
+
+
+
+&#x20;       .texto-intro {
+
+&#x20;           max-width: 400px;
+
+&#x20;       }
+
+
+
+&#x20;       /\* Área de Login ADM \*/
+
+&#x20;       .admin-login {
+
+&#x20;           position: absolute;
+
+&#x20;           top: 15px;
+
+&#x20;           right: 15px;
+
+&#x20;           display: flex;
+
+&#x20;           gap: 5px;
+
+&#x20;       }
+
+
+
+&#x20;       .admin-login input {
+
+&#x20;           padding: 5px;
+
+&#x20;           border-radius: 5px;
+
+&#x20;           border: none;
+
+&#x20;           width: 80px;
+
+&#x20;           font-size: 0.8rem;
+
+&#x20;       }
+
+
+
+&#x20;       /\* Painel de Controle (Escondido) \*/
+
+&#x20;       #painel-adm {
+
+&#x20;           display: none;
+
+&#x20;           background: white;
+
+&#x20;           max-width: 600px;
+
+&#x20;           margin: 20px auto;
+
+&#x20;           padding: 20px;
+
+&#x20;           border: 2px dashed var(--laranja);
+
+&#x20;           border-radius: 10px;
+
+&#x20;           text-align: center;
+
+&#x20;       }
+
+
+
+&#x20;       .input-novo-item {
+
+&#x20;           padding: 10px;
+
+&#x20;           width: 70%;
+
+&#x20;           border: 1px solid #ccc;
+
+&#x20;           border-radius: 5px;
+
+&#x20;       }
+
+
+
+&#x20;       /\* Lista de Presentes \*/
+
+&#x20;       .container-lista {
+
+&#x20;           max-width: 600px;
+
+&#x20;           margin: 20px auto 100px;
+
+&#x20;           background: white;
+
+&#x20;           padding: 30px;
+
+&#x20;           border-radius: 15px;
+
+&#x20;           box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+
+&#x20;       }
+
+
+
+&#x20;       .item-presente {
+
+&#x20;           display: flex;
+
+&#x20;           justify-content: space-between;
+
+&#x20;           align-items: center;
+
+&#x20;           padding: 15px;
+
+&#x20;           border-bottom: 1px solid #eee;
+
+&#x20;       }
+
+
+
+&#x20;       .item-presente.reservado span {
+
+&#x20;           text-decoration: line-through;
+
+&#x20;           color: #999;
+
+&#x20;       }
+
+
+
+&#x20;       /\* Botões \*/
+
+&#x20;       button {
+
+&#x20;           cursor: pointer;
+
+&#x20;           border: none;
+
+&#x20;           border-radius: 5px;
+
+&#x20;           padding: 10px 15px;
+
+&#x20;           font-weight: bold;
+
+&#x20;           transition: 0.3s;
+
+&#x20;       }
+
+
+
+&#x20;       .btn-reservar { background: var(--verde); color: white; }
+
+&#x20;       .btn-reservar:disabled { background: #ccc; cursor: not-allowed; }
+
+&#x20;       
+
+&#x20;       .btn-add { background: var(--laranja); color: white; }
+
+&#x20;       
+
+&#x20;       .btn-del { 
+
+&#x20;           background: #ff4d4d; 
+
+&#x20;           color: white; 
+
+&#x20;           padding: 5px 10px; 
+
+&#x20;           margin-left: 10px;
+
+&#x20;           display: none; /\* Só aparece para o ADM \*/
+
+&#x20;       }
+
+
+
+&#x20;       .hidden { display: none; }
+
+&#x20;   </style>
+
+</head>
+
+<body>
+
+
+
+&#x20;   <header class="header-preto">
+
+&#x20;       <div class="admin-login">
+
+&#x20;           <input type="password" id="senha-adm" placeholder="Senha">
+
+&#x20;           <button onclick="fazerLogin()" style="padding: 5px 10px; font-size: 0.7rem;">ADM</button>
+
+&#x20;       </div>
+
+&#x20;       <img src="capa.jpeg" alt="Rancho do Robinho 2" class="img-capa">
+
+&#x20;   </header>
+
+
+
+&#x20;   <section class="secao-hero">
+
+&#x20;       <img src="capa 2.jpeg" alt="Xerife" class="img-cowboy">
+
+&#x20;       <div class="texto-intro">
+
+&#x20;           <h1>Presentes do Xerife</h1>
+
+&#x20;           <p>Seja bem-vindo ao <strong>Rancho do Robinho 2</strong>! Escolha abaixo uma sugestão de presente para o aniversário e clique em reservar.</p>
+
+&#x20;       </div>
+
+&#x20;   </section>
+
+
+
+&#x20;   <div id="painel-adm">
+
+&#x20;       <h3>Painel do Xerife</h3>
+
+&#x20;       <input type="text" id="nome-presente" class="input-novo-item" placeholder="Digite um novo presente...">
+
+&#x20;       <button class="btn-add" onclick="adicionarPresente()">Adicionar</button>
+
+&#x20;   </div>
+
+
+
+&#x20;   <main class="container-lista">
+
+&#x20;       <h2 style="text-align: center; color: var(--laranja);">Lista de Sugestões</h2>
+
+&#x20;       <div id="lista-presentes">
+
+&#x20;           <div class="item-presente">
+
+&#x20;               <span>Garrafa de Whiskie Decorativa</span>
+
+&#x20;               <div>
+
+&#x20;                   <button class="btn-reservar" onclick="reservar(this)">Reservar</button>
+
+&#x20;                   <button class="btn-del" onclick="remover(this)">X</button>
+
+&#x20;               </div>
+
+&#x20;           </div>
+
+&#x20;       </div>
+
+&#x20;   </main>
+
+
+
+&#x20;   <script>
+
+&#x20;       // SENHA DO ADMINISTRADOR
+
+&#x20;       const SENHA\_CORRETA = "robinho2";
+
+
+
+&#x20;       // Função de Login
+
+&#x20;       function fazerLogin() {
+
+&#x20;           const senha = document.getElementById('senha-adm').value;
+
+&#x20;           if(senha === SENHA\_CORRETA) {
+
+&#x20;               document.getElementById('painel-adm').style.display = 'block';
+
+&#x20;               // Mostra os botões de apagar
+
+&#x20;               const botoesDel = document.querySelectorAll('.btn-del');
+
+&#x20;               botoesDel.forEach(btn => btn.style.display = 'inline-block');
+
+&#x20;               alert("Acesso autorizado, Robinho!");
+
+&#x20;           } else {
+
+&#x20;               alert("Senha incorreta, parceiro.");
+
+&#x20;           }
+
+&#x20;       }
+
+
+
+&#x20;       // Função de Adicionar
+
+&#x20;       function adicionarPresente() {
+
+&#x20;           const input = document.getElementById('nome-presente');
+
+&#x20;           const nome = input.value;
+
+&#x20;           
+
+&#x20;           if(nome.trim() !== "") {
+
+&#x20;               const lista = document.getElementById('lista-presentes');
+
+&#x20;               const novoItem = document.createElement('div');
+
+&#x20;               novoItem.className = 'item-presente';
+
+&#x20;               
+
+&#x20;               // Verifica se o ADM está logado para já mostrar o botão de apagar
+
+&#x20;               const painelAberto = document.getElementById('painel-adm').style.display === 'block';
+
+&#x20;               const displayDel = painelAberto ? 'inline-block' : 'none';
+
+
+
+&#x20;               novoItem.innerHTML = `
+
+&#x20;                   <span>${nome}</span>
+
+&#x20;                   <div>
+
+&#x20;                       <button class="btn-reservar" onclick="reservar(this)">Reservar</button>
+
+&#x20;                       <button class="btn-del" style="display: ${displayDel}" onclick="remover(this)">X</button>
+
+&#x20;                   </div>
+
+&#x20;               `;
+
+&#x20;               lista.appendChild(novoItem);
+
+&#x20;               input.value = "";
+
+&#x20;           }
+
+&#x20;       }
+
+
+
+&#x20;       // Função de Reservar
+
+&#x20;       function reservar(botao) {
+
+&#x20;           if(confirm("Deseja reservar este presente? Essa ação não pode ser desfeita.")) {
+
+&#x20;               botao.innerText = "Reservado";
+
+&#x20;               botao.disabled = true;
+
+&#x20;               botao.closest('.item-presente').classList.add('reservado');
+
+&#x20;           }
+
+&#x20;       }
+
+
+
+&#x20;       // Função de Remover (ADM)
+
+&#x20;       function remover(botao) {
+
+&#x20;           if(confirm("Remover este item da lista?")) {
+
+&#x20;               botao.closest('.item-presente').remove();
+
+&#x20;           }
+
+&#x20;       }
+
+&#x20;   </script>
+
+</body>
+
+</html>
+
