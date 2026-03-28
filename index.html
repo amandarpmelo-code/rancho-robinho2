@@ -20,40 +20,42 @@
             padding: 0;
             font-family: 'Segoe UI', Arial, sans-serif;
             color: var(--marrom);
-            /* Ajustando a segunda imagem como fundo fixo e que cobre tudo */
+            /* Segunda imagem como fundo fixo e que cobre tudo */
             background-image: url('capa 2.jpeg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Mantém o fundo fixo ao rolar */
+            background-attachment: fixed;
             background-repeat: no-repeat;
         }
 
-        /* Banner Superior (Primeira Imagem) */
+        /* Banner Superior (Primeira Imagem - ATUALIZADO) */
         .header-banner {
             background-color: var(--preto);
             text-align: center;
             position: relative;
-            /* Definindo dimensões exatas: 1200x400 (proporção 3:1) */
-            width: 1200px;
-            height: 400px;
-            margin: 0 auto; /* Centraliza o banner na tela */
-            overflow: hidden; /* Garante que nada saia do banner */
+            /* Dimensões muito menores: 1200x150 pixels */
+            max-width: 1200px;
+            height: 150px; /* Redução radical da altura */
+            margin: 0 auto;
+            overflow: hidden;
+            border-bottom: 2px solid var(--laranja); /* Linha divisória charmosa */
         }
 
         .img-banner {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ajusta a imagem para cobrir o banner sem distorcer */
-            object-position: center; /* Centraliza a imagem dentro do banner */
+            object-fit: contain; /* Mostra a imagem inteira sem cortar */
+            object-position: center; /* Centraliza a imagem */
+            opacity: 0.6; /* Efeito esmaecido (60% de opacidade) */
         }
 
         .admin-login {
             position: absolute;
-            top: 15px;
+            top: 10px;
             right: 15px;
             display: flex;
             gap: 5px;
-            background-color: rgba(255, 255, 255, 0.7); /* Fundo semi-transparente */
+            background-color: rgba(255, 255, 255, 0.7);
             padding: 5px;
             border-radius: 5px;
         }
@@ -66,7 +68,7 @@
             font-size: 0.8rem;
         }
 
-        /* Painel de Controle (Escondido) */
+        /* Painel de Controle (Inalterado) */
         #painel-adm {
             display: none;
             background: white;
@@ -82,95 +84,3 @@
         .input-novo-item {
             padding: 10px;
             width: 70%;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        /* Lista de Presentes */
-        .container-lista {
-            max-width: 600px;
-            margin: 20px auto 100px;
-            background: rgba(255, 255, 255, 0.9); /* Fundo branco semi-transparente */
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .item-presente {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .item-presente.reservado span {
-            text-decoration: line-through;
-            color: #999;
-        }
-
-        /* Botões */
-        button {
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 15px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn-reservar { background: var(--verde); color: white; }
-        .btn-reservar:disabled { background: #ccc; cursor: not-allowed; }
-        
-        .btn-add { background: var(--laranja); color: white; }
-        
-        .btn-del { 
-            background: #ff4d4d; 
-            color: white; 
-            padding: 5px 10px; 
-            margin-left: 10px;
-            display: none; /* Só aparece para o ADM */
-        }
-
-        .hidden { display: none; }
-    </style>
-</head>
-<body>
-
-    <header class="header-banner">
-        <div class="admin-login">
-            <input type="password" id="senha-adm" placeholder="Senha ADM">
-            <button onclick="fazerLogin()" style="padding: 5px 10px; font-size: 0.7rem;">ADM</button>
-        </div>
-        <img src="capa.jpeg" alt="Rancho do Robinho 2 Banner" class="img-banner">
-    </header>
-
-    <div id="painel-adm">
-        <h3>Painel do Xerife</h3>
-        <input type="text" id="nome-presente" class="input-novo-item" placeholder="Digite um novo presente...">
-        <button class="btn-add" onclick="adicionarPresente()">Adicionar</button>
-    </div>
-
-    <main class="container-lista">
-        <h1 style="text-align: center; color: var(--laranja); margin-top: 0;">Presentes do Xerife</h1>
-        <p style="text-align: center;">Bem-vindo ao <strong>Rancho do Robinho 2</strong>! Escolha um item abaixo e clique em reservar.</p>
-        <div id="lista-presentes"></div>
-    </main>
-
-    <script>
-        // CONFIGURAÇÃO DO FIREBASE (VOCÊ PRECISA PREENCHER AQUI)
-        const firebaseConfig = {
-            // Cole aqui o link do seu Realtime Database (ex: "https://seu-projeto.firebaseio.com")
-            databaseURL: "SEU_LINK_DO_DATABASE_AQUI",
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        // SENHA DO ADMINISTRADOR
-        const SENHA_CORRETA = "robinho2";
-
-        // Função de Login
-        function fazerLogin() {
-            const senha = document.getElementById('senha-adm').value;
-            if(senha === SENHA_CORRETA) {
-                document.getElementById('painel-adm').style.display = 'block';
