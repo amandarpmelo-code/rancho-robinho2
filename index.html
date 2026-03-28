@@ -3,130 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rancho do Robinho 2</title>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <title>Rancho do Robinho 2 - Lista de Presentes</title>
     <style>
-        :root { --laranja: #e28f42; --marrom: #3e2723; --verde: #2e8b57; }
-        
-        body {
-            margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif;
-            /* AJUSTE DE FUNDO: Imagem fixa e centralizada */
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('capa 2.jpeg') no-repeat center center fixed;
-            background-size: cover; 
-            color: var(--marrom);
+        /* Estilização Geral */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
         }
 
-        .topo-adm { background: rgba(0,0,0,0.8); padding: 10px; text-align: right; }
-        .topo-adm input { padding: 5px; border-radius: 4px; border: none; width: 100px; margin-right: 5px; background: #333; color: white; }
-
-        .mural {
-            max-width: 500px; margin: 40px auto; 
-            /* TRANSPARÊNCIA: Deixando o fundo aparecer através do mural */
-            background: rgba(255, 255, 255, 0.85); 
-            padding: 25px; border-radius: 15px; text-align: center; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.3);
+        /* Imagem de Fundo Esmaecida */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('rancho-novo.jpg'); /* Certifique-se que o arquivo está na mesma pasta */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            filter: brightness(0.5) contrast(0.8) opacity(0.6); /* Efeito esmaecido */
+            z-index: -1;
         }
 
-        .logo-mural { width: 100%; max-width: 250px; margin-bottom: 15px; filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.5)); }
-        
-        #painel-adm { display: none; background: rgba(240, 240, 240, 0.9); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 2px dashed var(--laranja); }
-        
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); }
-        .item.reservado span { text-decoration: line-through; color: #666; font-style: italic; }
-        
-        button { padding: 10px 18px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-res { background: var(--verde); color: white; }
-        .btn-res:hover { background: #1e5c3a; }
-        .btn-res:disabled { background: #999; cursor: not-allowed; }
-        .btn-del { background: #ff4d4d; color: white; margin-left: 8px; display: none; padding: 5px 10px; }
+        /* Ícone de Admin (Canto Superior Direito) */
+        .admin-login {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            text-decoration: none;
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; }
-        .modal-content { background: white; width: 85%; max-width: 320px; margin: 100px auto; padding: 25px; border-radius: 10px; text-align: center; }
-        .modal-content input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        .admin-login:hover {
+            transform: scale(1.1);
+        }
 
-        h1 { font-size: 1.8rem; text-shadow: 1px 1px 2px rgba(255,255,255,0.5); }
+        /* Conteúdo Principal */
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 { color: #5d4037; margin-bottom: 10px; }
+        p.subtitle { font-size: 1.2rem; font-style: italic; color: #795548; }
+
+        /* Lista de Presentes */
+        .gift-list {
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .gift-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Formulário de Reserva */
+        .reservation-box {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        input[type="email"], select {
+            width: 80%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #5d4037;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #3e2723;
+        }
+
+        footer { margin-top: 20px; font-size: 0.8rem; color: #666; }
     </style>
 </head>
 <body>
-    <div class="topo-adm">
-        <input type="password" id="senha-adm" placeholder="Senha ADM">
-        <button onclick="logar()" style="font-size: 0.7rem; background: var(--laranja); color: white;">Acesso ADM</button>
-    </div>
 
-    <div class="mural">
-        <img src="logo-nova.png" class="logo-mural" alt="Logo Rancho do Robinho 2">
-        <h1>Sugestões do Xerife</h1>
+    <div class="background-container"></div>
 
-        <div id="painel-adm">
-            <input type="text" id="add-nome" placeholder="Nome do presente..." style="width: 80%; padding: 10px; margin-bottom: 10px;">
-            <button onclick="adicionar()" style="background:var(--marrom); color:white; width:100%;">Adicionar à Lista</button>
-        </div>
+    <a href="#" class="admin-login" title="Área do Administrador">
+        ⚙️
+    </a>
 
-        <div id="lista"></div>
-    </div>
+    <div class="container">
+        <h1>Rancho do Robinho 2</h1>
+        <p class="subtitle">"Venha celebrar comigo essa data importante!"</p>
+        
+        <hr>
 
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <h3>Reservar Presente</h3>
-            <p>Deixe seu nome e e-mail para confirmarmos a reserva:</p>
-            <input type="text" id="c-nome" placeholder="Seu Nome">
-            <input type="email" id="c-email" placeholder="Seu E-mail">
-            <button class="btn-res" onclick="confirmar()" style="width:100%">Confirmar Reserva</button>
-            <button onclick="fechar()" style="background:none; color:#888; width:100%; margin-top:10px">Voltar</button>
-        </div>
+        <h3>Sugestão para presentes</h3>
+        <p>Escolha um item da lista que gostaria de presentear:</p>
+
+        <form id="reservaForm">
+            <div class="gift-list">
+                <select id="presente" required>
+                    <option value="" disabled selected>Selecione um presente...</option>
+                    <option value="jogo-pratos">Jogo de Pratos Rústicos</option>
+                    <option value="kit-churrasco">Kit Churrasco Profissional</option>
+                    <option value="rede-descanso">Rede de Descanso</option>
+                    <option value="caixa-termica">Caixa Térmica 45L</option>
+                    <option value="decoracao-parede">Quadro Decorativo Country</option>
+                </select>
+            </div>
+
+            <div class="reservation-box">
+                <h4>Reserve abaixo o seu presente</h4>
+                <p><small>Enviaremos um lembrete para o seu e-mail.</small></p>
+                
+                <input type="email" id="emailConvidado" placeholder="Seu melhor e-mail" required>
+                <br><br>
+                <button type="submit">RESERVAR AGORA</button>
+            </div>
+        </form>
+
+        <footer>
+            © 2024 Rancho do Robinho 2 - Todos os direitos reservados.
+        </footer>
     </div>
 
     <script>
-        // Use o seu link do Firebase aqui
-        const firebaseConfig = { databaseURL: "https://rancho-robinho2-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        let sel = null;
-
-        function logar() {
-            if(document.getElementById('senha-adm').value === "robinho2") {
-                document.getElementById('painel-adm').style.display = 'block';
-                document.querySelectorAll('.btn-del').forEach(b => b.style.display = 'inline-block');
-                alert("Olá, Xerife! Painel liberado.");
-            } else { alert("Senha incorreta!"); }
-        }
-
-        function adicionar() {
-            const n = document.getElementById('add-nome').value;
-            if(n) { db.ref('presentes').push({ nome: n, reservado: false }); document.getElementById('add-nome').value = ""; }
-        }
-
-        function fechar() { document.getElementById('modal').style.display = 'none'; }
-        function abrir(id) { sel = id; document.getElementById('modal').style.display = 'block'; }
-
-        function confirmar() {
-            const n = document.getElementById('c-nome').value;
-            const e = document.getElementById('c-email').value;
-            if(n && e) { 
-                db.ref('presentes/' + sel).update({ reservado: true, q: n, em: e }); 
-                fechar(); 
-                alert("Reserva feita! Obrigado.");
-            } else { alert("Por favor, preencha todos os campos."); }
-        }
-
-        function remover(id) { if(confirm("Deseja mesmo remover este item?")) db.ref('presentes/' + id).remove(); }
-
-        db.ref('presentes').on('value', (snap) => {
-            const l = document.getElementById('lista'); l.innerHTML = "";
-            const isAdm = document.getElementById('painel-adm').style.display === 'block';
-            snap.forEach((i) => {
-                const p = i.val(); const id = i.key;
-                l.innerHTML += `<div class="item ${p.reservado ? 'reservado' : ''}">
-                    <span>${p.nome}</span>
-                    <div>
-                        <button class="btn-res" ${p.reservado ? 'disabled' : ''} onclick="abrir('${id}')">${p.reservado ? 'Reservado' : 'Reservar'}</button>
-                        <button class="btn-del" style="display:${isAdm ? 'inline-block' : 'none'}" onclick="remover('${id}')">X</button>
-                    </div>
-                </div>`;
-            });
-        });
+        document.getElementById('reservaForm').onsubmit = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailConvidado').value;
+            const item = document.getElementById('presente').value;
+            alert('Sucesso! O item "' + item + '" foi reservado. Um comprovante foi enviado para: ' + email);
+        };
     </script>
+
 </body>
 </html>
